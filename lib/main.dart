@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:what_to_eat/signup.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
+        
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -97,6 +99,18 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.display1,
+            ),
+            RaisedButton ( 
+              onPressed: () {
+                //navigate to the signup page,
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignUp()),
+                );
+              },
+              child: Text( 
+                'Sign Up',
+              ),
             ),
           ],
         ),
