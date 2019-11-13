@@ -25,7 +25,7 @@ jobs:
         fi
 
     - name: Move to API directory
-      run: cd api
+      run: ls-l; cd api
 
     - name: Build
       run: go build -v .
