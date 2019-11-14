@@ -15,8 +15,8 @@ jobs:
         uses: actions/checkout@master
       - name: Get Flutter
         uses: subosito/flutter-action@v1
-         with:
-           channel: 'stable' # or: 'dev' or 'beta'
+        with:
+          channel: 'stable' # or: 'dev' or 'beta'
       - name: Install dependencies
         run: flutter pub get
       - name: Run tests
