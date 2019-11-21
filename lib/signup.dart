@@ -1,99 +1,116 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'home.dart';
+class signup extends StatefulWidget {
+  @override
+  _signupState createState() => _signupState();
+}
 
-class SignUp extends StatelessWidget {
+class _signupState extends State<signup> {
+  String _email,_password;
+  final GlobalKey<FormState> _formKey=GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('What To Eat Sign Up'),
+     appBar: AppBar(
+        title: Text('What to Eat'),
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Text('Email: '),
-                Container(
-                  alignment: Alignment.center,
-                  width: 300,
-                  constraints: BoxConstraints(minWidth: 230.0, minHeight: 25.0),
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              ],
+     
+    
+    body: Center(
+      child:Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
             ),
-            RaisedButton(
-              onPressed: () {
-                //send data to the server
-              },
-              child: Text(
-                ' Sign Up',
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// Create a Form widget.
-class MyCustomForm extends StatefulWidget {
-  @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
-  }
-}
-
-// Create a corresponding State class.
-// This class holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: RaisedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false
-                // otherwise.
-                if (_formKey.currentState.validate()) {
-                  // If the form is valid, display a Snackbar.
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text('Processing Data')));
+        child: Container(
+          width: 300,
+          height: 300,
+          child: Form(
+             key: _formKey,
+          child: Column(children: <Widget>[
+            TextFormField(
+              validator: (input) {
+                if(input.isEmpty){
+                  return 'Please type An Email';
                 }
               },
-              child: Text('Submit'),
+              onSaved: (input)=> _email=input,
+              decoration: InputDecoration(
+              labelText: 'Email',
+              border: new OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  const Radius.circular(10.0),
+                ),
+
+              ),
+              
             ),
+      
           ),
-        ],
+          TextFormField(
+              validator: (input) {
+                if(input.isEmpty){
+                  return 'Please provide a password';
+                }
+                 else if(input.length <6){
+                  return 'Your Password needs to be at least 6 characters';
+                }
+              },
+              onSaved: (input)=> _password=input,
+              decoration: InputDecoration(
+              labelText: 'Password',
+                   border: new OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  const Radius.circular(10.0),
+                ),
+                
+
+              ),
+                  filled: true,
+                hintStyle: new TextStyle(color: Colors.grey[800]),
+                hintText: "Password",
+                fillColor: Colors.white70
+            ),
+            obscureText: true,
+          ),
+           RaisedButton(
+            onPressed: signIn,
+            child: Text("Sign up"),
+
+          )
+          
+          ]
+
+          )
+        
+        ),
       ),
-    );
+ 
+    
+   
+    ),
+
+    )
+
+    
+  );
   }
+    Future<void> signIn() async{
+    final FormState=_formKey.currentState;
+    if(FormState.validate()){
+      FormState.save();
+      try{
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(email:_email,password: _password);
+        //FirebaseAuth.instance.signInWithEmailAndPassword(email:_email,password: _password);
+         //Navigator.push(context,MaterialPageRoute(builder: (context)=>Home()));
+         Navigator.of(context).pop();
+      }
+      catch(e){
+        print(e.message);
+
+      }
+     
+    }
+  }
+
 }
